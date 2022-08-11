@@ -60,7 +60,7 @@ namespace ControleDeContatos.Controllers
             try {
 
                 if (ModelState.IsValid) {
-                    _contatoRepositorio.Adicionar(contato);
+                    contato = _contatoRepositorio.Adicionar(contato);
                     TempData["MensagemSucesso"] = "Contato cadastrado com sucesso";
                     return RedirectToAction("Index");
                 }
@@ -74,11 +74,11 @@ namespace ControleDeContatos.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Alterar(ContatoModel contato)
+        public IActionResult Editar(ContatoModel contato)
         {
             try {
                 if (ModelState.IsValid) {
-                    _contatoRepositorio.Atualizar(contato);
+                    contato = _contatoRepositorio.Atualizar(contato);
                     TempData["MensagemSucesso"] = $"Contato alterado com sucesso ";
                     return RedirectToAction("Index");
                 }
