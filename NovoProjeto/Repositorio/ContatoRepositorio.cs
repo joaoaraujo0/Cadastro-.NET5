@@ -16,9 +16,9 @@ namespace NovoProjeto.Repositorio
         {
             return _context.Contatos.FirstOrDefault(x =>x.Id==id);
         }
-        public List<ContatoModel> BuscarTodos()
+        public List<ContatoModel> BuscarTodos( int usuarioId)
         {
-            return _context.Contatos.ToList();
+            return _context.Contatos.Where(X=>X.UsuarioId==usuarioId).ToList();
         }
         public ContatoModel Adicionar(ContatoModel contato)
         {

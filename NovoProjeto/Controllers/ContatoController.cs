@@ -1,20 +1,27 @@
 ﻿using ControleDeContatos.Models;
 using Microsoft.AspNetCore.Mvc;
+using NovoProjeto.Filters;
+using NovoProjeto.Helper;
+using NovoProjeto.Models;
 using NovoProjeto.Repositorio;
 using System.Collections.Generic;
 
 namespace ControleDeContatos.Controllers
 {
+    [PaginaParaUsuarioLogado]
     public class ContatoController : Controller
     {
         private readonly IContatoRepositorio _contatoRepositorio;
-        public ContatoController(IContatoRepositorio contatoRepositorio)
+        private readonly ISessao _sessao;
+        public ContatoController(IContatoRepositorio contatoRepositorio,ISessao sessao)
         {
             _contatoRepositorio = contatoRepositorio;
+            _sessao = sessao;
         }
         public IActionResult Index()
         {
-            List<ContatoModel> contatos = _contatoRepositorio.BuscarTodos();
+            UsuarioModel usuarioLogado =_sessao.BuscarSessaoDoUsuario();
+            List<ContatoModel> contatos = _contatoRepositorio.BuscarTodos(usuarioLogado.Id);
             return View(contatos);
         }
         public IActionResult Criar()
@@ -60,7 +67,11 @@ namespace ControleDeContatos.Controllers
             try {
 
                 if (ModelState.IsValid) {
+                    UsuarioModel usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+                    contato.UsuarioId = usuarioLogado.Id;
+
                     contato = _contatoRepositorio.Adicionar(contato);
+
                     TempData["MensagemSucesso"] = "Contato cadastrado com sucesso";
                     return RedirectToAction("Index");
                 }
@@ -78,6 +89,9 @@ namespace ControleDeContatos.Controllers
         {
             try {
                 if (ModelState.IsValid) {
+                    UsuarioModel usuarioLogado = _sessao.BuscarSessaoDoUsuario();
+                    contato.UsuarioId = usuarioLogado.Id;
+
                     contato = _contatoRepositorio.Atualizar(contato);
                     TempData["MensagemSucesso"] = $"Contato alterado com sucesso ";
                     return RedirectToAction("Index");

@@ -35,10 +35,11 @@
     <table id="table-usuarios" class="display" style="width:100%">
         <thead>
             <tr>
-                <th scope="col">#</th>
+                 <th scope="col">#</th>
                 <th scope="col">Nome</th>
                 <th scope="col">Login</th>
                 <th scope="col">Email</th>
+                <th scope="col">Perfil</th>
                 <th scope="col">Data de cadastro</th>
                 <th scope="col"></th>
             </tr>
@@ -49,10 +50,11 @@
                 foreach (var usuario in Model)
                 {
                     <tr>
-                        <th scope="row">@usuario.Id</th>
+                         <th scope="row">@usuario.Id</th>
                         <td>@usuario.Nome</td>
                         <td>@usuario.Login</td>
                         <td>@usuario.Email</td>
+                        <td>@(usuario.Perfil == NovoProjeto.Enums.PerfilEnum.Admin ? "Administrador" : "Padrão")</td>
                         <td>@usuario.DataCadastro</td>
                         <td>
                             <div class="btn-group" role="group">

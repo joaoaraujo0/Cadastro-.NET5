@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NovoProjeto.Filters;
 using NovoProjeto.Models;
 using NovoProjeto.Repositorio;
 using System.Collections.Generic;
 
 namespace NovoProjeto.Controllers
 {
+    [PaginaRestritaSomenteAdmin]
     public class UsuarioController : Controller
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
@@ -59,7 +61,7 @@ namespace NovoProjeto.Controllers
             try {
 
                 if (ModelState.IsValid) {
-                    _usuarioRepositorio.Adicionar(usuario);
+                     usuario = _usuarioRepositorio.Adicionar(usuario);
                     TempData["MensagemSucesso"] = "Usuario cadastrado com sucesso";
                     return RedirectToAction("Index");
                 }

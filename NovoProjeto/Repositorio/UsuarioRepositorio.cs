@@ -18,6 +18,10 @@ namespace NovoProjeto.Repositorio
         {
             return _context.Usuarios.FirstOrDefault(x => x.Login.ToUpper() == login.ToUpper());
         }
+        public UsuarioModel BuscarPorEmailELogin(string email, string login)
+        {
+            return _context.Usuarios.FirstOrDefault(x => x.Email.ToUpper() == email.ToUpper() && x.Login.ToUpper()==login.ToUpper());
+        }
         public UsuarioModel BuscarPorID(int id)
         {
             return _context.Usuarios.FirstOrDefault(x =>x.Id==id);
@@ -29,6 +33,7 @@ namespace NovoProjeto.Repositorio
         public UsuarioModel Adicionar(UsuarioModel usuario)
         {
             usuario.DataCadastro = DateTime.Now;
+            usuario.SetSenhaHash();
             _context.Usuarios.Add(usuario);
             _context.SaveChanges();
             return usuario;
@@ -51,6 +56,25 @@ namespace NovoProjeto.Repositorio
             return usuarioDB;
 
         }
+        public UsuarioModel AlterarSenha(AlterarSenhaModel alterarSenhaModel)
+        {
+            UsuarioModel usuarioDB = BuscarPorID(alterarSenhaModel.Id);
+
+            if (usuarioDB == null) throw new Exception("Houve um erro na atualização da senha, usuario não encontrado!");
+
+            if (!usuarioDB.SenhaValida(alterarSenhaModel.SenhaAtual)) throw new Exception("Senha atual não confere!");
+
+            if (usuarioDB.SenhaValida(alterarSenhaModel.NovaSenha)) throw new Exception("Nova senha deve ser diferente da atual");
+            
+            usuarioDB.SetNovaSenha(alterarSenhaModel.NovaSenha);
+            usuarioDB.DataAtualizacao = DateTime.Now;
+
+            _context.Usuarios.Update(usuarioDB);
+            _context.SaveChanges();
+
+            return usuarioDB;
+        
+        }
 
         public bool Apagar(int id)
         {
@@ -64,6 +88,6 @@ namespace NovoProjeto.Repositorio
             return true;
         }
 
-       
+      
     }
 }

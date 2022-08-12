@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NovoProjeto.Filters;
 using NovoProjeto.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace NovoProjeto.Controllers {
+    [PaginaParaUsuarioLogado]
     public class HomeController : Controller {
         private readonly ILogger<HomeController> _logger;
 
