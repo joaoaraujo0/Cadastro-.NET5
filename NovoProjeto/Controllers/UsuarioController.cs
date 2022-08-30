@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ControleDeContatos.Models;
+using Microsoft.AspNetCore.Mvc;
 using NovoProjeto.Filters;
 using NovoProjeto.Models;
 using NovoProjeto.Repositorio;
@@ -10,9 +11,12 @@ namespace NovoProjeto.Controllers
     public class UsuarioController : Controller
     {
         private readonly IUsuarioRepositorio _usuarioRepositorio;
-        public UsuarioController(IUsuarioRepositorio usuarioRepositorio)
+        private readonly IContatoRepositorio _contatoRepositorio;
+        public UsuarioController(IUsuarioRepositorio usuarioRepositorio,
+                                IContatoRepositorio contatoRepositorio)
         {
             _usuarioRepositorio = usuarioRepositorio;
+            _contatoRepositorio = contatoRepositorio;
         }
         public IActionResult Index()
         {
@@ -54,6 +58,12 @@ namespace NovoProjeto.Controllers
                 return RedirectToAction("Index");
             }
 
+        }
+
+        public IActionResult ListarContatosPorUsuarioId(int id)
+        {
+            List<ContatoModel> contatos = _contatoRepositorio.BuscarTodos(id);
+            return PartialView("_ContatosUsuario", contatos);
         }
         [HttpPost]
         public IActionResult Criar(UsuarioModel usuario)
